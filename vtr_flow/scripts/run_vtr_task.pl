@@ -73,6 +73,7 @@ my $verbosity              = 0;
 my $short_task_names = 0;
 my $minw_hint_factor = 1.;
 my $show_failures = 0;
+my $dryrun = 0;
 
 # Parse Input Arguments
 while ( $token = shift(@ARGV) ) {
@@ -85,6 +86,10 @@ while ( $token = shift(@ARGV) ) {
 	# Check for -jN
 	if ( $token =~ /^-j(\d+)$/ ) {
 		$processors = int($1);
+	}
+
+	if ( $token eq "-d" ) {
+		$dryrun = 1;
 	}
 
 	# Check for -p N or -j N
@@ -182,9 +187,14 @@ if ( $#tasks == -1 ) {
 ##############################################################
 
 my $common_task_prefix = "";
+my $drfile;
 
 if ($short_task_names) {
     $common_task_prefix = find_common_task_prefix(\@tasks);
+}
+
+if ($dryrun) {
+	open($drfile, '>', 'generated_scripts.txt');
 }
 
 #Collect the actions for all tasks
@@ -195,6 +205,10 @@ foreach my $task (@tasks) {
     push(@all_task_actions, @$task_actions);
 }
 
+if ($dryrun == 0) {
+	close $drfile;
+	exit 0;
+}
 #Run all the actions (potentially in parallel)
 my $num_total_failures = run_actions(\@all_task_actions);
 
@@ -469,6 +483,10 @@ sub generate_single_task_actions {
                         runtime_estimate => $runtime_estimate,
                         memory_estimate => $memory_estimate
                     });
+
+	    	if ($dryrun) {
+			print $drfile "$run_script_file\n";
+		}
 
                 my @action = [$dir, $run_script_file, $runtime_estimate, $memory_estimate];
                 push(@actions, @action);
