@@ -205,7 +205,7 @@ foreach my $task (@tasks) {
     push(@all_task_actions, @$task_actions);
 }
 
-if ($dryrun == 0) {
+if ($dryrun) {
 	close $drfile;
 	exit 0;
 }
