@@ -988,7 +988,7 @@ if ( $ending_stage >= $stage_idx_vpr and !$error_code ) {
 	} else { # specified channel width
         my $fixed_W_log_file = "vpr.out";
 
-        my $rr_graph_out_file = "rr_graph.xml";
+        my $rr_graph_out_file = "${vtr_flow_path}/../${temp_dir}rr_graph.xml";
 
         my @fixed_W_extra_vpr_args = @forwarded_vpr_args;
 
@@ -1019,7 +1019,7 @@ if ( $ending_stage >= $stage_idx_vpr and !$error_code ) {
         if ($do_second_vpr_run) {
             my @second_run_extra_vpr_args = @forwarded_vpr_args;
 
-            my $rr_graph_out_file2 = "rr_graph2.xml";
+            my $rr_graph_out_file2 = "${vtr_flow_path}/../${temp_dir}rr_graph2.xml";
             if ($verify_rr_graph){
                 push( @second_run_extra_vpr_args, ("--read_rr_graph", $rr_graph_out_file));
                 push( @second_run_extra_vpr_args, ("--write_rr_graph", $rr_graph_out_file2));
