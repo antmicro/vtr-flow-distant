@@ -45,6 +45,7 @@ use File::Copy;
 use FindBin;
 use File::Find;
 use File::Basename;
+use File::Tee qw(tee);
 use Time::HiRes;
 
 use lib "$FindBin::Bin/perl_libs/XML-TreePP-0.41/lib";
@@ -1253,7 +1254,8 @@ sub system_with_timeout {
 		chdir $_[3];
 
 
-		open( STDOUT, "> $_[1]" );
+		#open( STDOUT, "> $_[1]" );
+		tee STDOUT, '>>', "$_[1]";
 		if (!$valgrind) {
 			open( STDERR, ">&STDOUT" );
 		}
